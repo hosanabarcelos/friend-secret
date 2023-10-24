@@ -3,128 +3,130 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import Form from '../Form';
 import { RecoilRoot } from 'recoil';
 
-test('if the input is empty, do not accept new participants added', () => {
-    render(
-        <RecoilRoot>
-            <Form />
-        </RecoilRoot>
-    );
+describe('FormComponent', () => {
+    test('if the input is empty, do not accept new participants added', () => {
+        render(
+            <RecoilRoot>
+                <Form />
+            </RecoilRoot>
+        );
 
-    //encontrar o DOM no input
-    const input = screen.getByPlaceholderText('Insira o nome do participante');
+        //encontrar o DOM no input
+        const input = screen.getByPlaceholderText('Insira o nome do participante');
 
-    //encontrar o botão
-    const button = screen.getByRole('button');
+        //encontrar o botão
+        const button = screen.getByRole('button');
 
-    //garantir que o input esteja no documento
-    expect(input).toBeInTheDocument();
+        //garantir que o input esteja no documento
+        expect(input).toBeInTheDocument();
 
-    //garantir que o botão esteja desabilitado
-    expect(button).toBeDisabled();
-});
-
-test('if the name is filled in, add participant', () => {
-    render(
-        <RecoilRoot>
-            <Form />
-        </RecoilRoot>
-    );
-
-    //encontrar o DOM no input
-    const input = screen.getByPlaceholderText('Insira o nome do participante');
-
-    //encontrar o botão
-    const button = screen.getByRole('button');
-
-    //inserir valor de input
-    fireEvent.change(input, {
-        target: {
-            value: 'Pedro Astronauta'
-        }
+        //garantir que o botão esteja desabilitado
+        expect(button).toBeDisabled();
     });
 
-    //submeter formulário
-    fireEvent.click(button);
+    test('if the name is filled in, add participant', () => {
+        render(
+            <RecoilRoot>
+                <Form />
+            </RecoilRoot>
+        );
 
-    //garantir que o input esteja com foco ativo
-    expect(input).toHaveFocus();
+        //encontrar o DOM no input
+        const input = screen.getByPlaceholderText('Insira o nome do participante');
 
-    //garantir que o input não tenha um valor
-    expect(input).toHaveValue('');
-});
+        //encontrar o botão
+        const button = screen.getByRole('button');
 
-test('if the name is requested, do not add and display error', () => {
-    render(
-        <RecoilRoot>
-            <Form />
-        </RecoilRoot>
-    );
+        //inserir valor de input
+        fireEvent.change(input, {
+            target: {
+                value: 'Pedro Astronauta'
+            }
+        });
 
-    //encontrar o DOM no input
-    const input = screen.getByPlaceholderText('Insira o nome do participante');
+        //submeter formulário
+        fireEvent.click(button);
 
-    //encontrar o botão
-    const button = screen.getByRole('button');
+        //garantir que o input esteja com foco ativo
+        expect(input).toHaveFocus();
 
-    //inserir valor de input
-    fireEvent.change(input, {
-        target: {
-            value: 'Pedro Astronauta'
-        }
+        //garantir que o input não tenha um valor
+        expect(input).toHaveValue('');
     });
 
-    //Repetir valor de input
-    fireEvent.change(input, {
-        target: {
-            value: 'Pedro Astronauta'
-        }
+    test('if the name is requested, do not add and display error', () => {
+        render(
+            <RecoilRoot>
+                <Form />
+            </RecoilRoot>
+        );
+
+        //encontrar o DOM no input
+        const input = screen.getByPlaceholderText('Insira o nome do participante');
+
+        //encontrar o botão
+        const button = screen.getByRole('button');
+
+        //inserir valor de input
+        fireEvent.change(input, {
+            target: {
+                value: 'Pedro Astronauta'
+            }
+        });
+
+        //Repetir valor de input
+        fireEvent.change(input, {
+            target: {
+                value: 'Pedro Astronauta'
+            }
+        });
+
+        //submeter formulário
+        fireEvent.click(button);
+
+        const errorMessage = screen.getByRole('alert');
+
+        expect(errorMessage.textContent).toBe('Nomes duplicados não são permitidos.')
     });
 
-    //submeter formulário
-    fireEvent.click(button);
+    test('if 3 minutes pass, remove error', () => {
+        jest.useFakeTimers();
 
-    const errorMessage = screen.getByRole('alert');
+        render(
+            <RecoilRoot>
+                <Form />
+            </RecoilRoot>
+        );
 
-    expect(errorMessage.textContent).toBe('Nomes duplicados não são permitidos.')
-});
+        //encontrar o DOM no input
+        const input = screen.getByPlaceholderText('Insira o nome do participante');
 
-test('if 3 minutes pass, remove error', () => {
-    jest.useFakeTimers();
+        //encontrar o botão
+        const button = screen.getByRole('button');
 
-    render(
-        <RecoilRoot>
-            <Form />
-        </RecoilRoot>
-    );
+        //inserir valor de input
+        fireEvent.change(input, {
+            target: {
+                value: 'Pedro Astronauta'
+            }
+        });
 
-    //encontrar o DOM no input
-    const input = screen.getByPlaceholderText('Insira o nome do participante');
+        //Repetir valor de input
+        fireEvent.change(input, {
+            target: {
+                value: 'Pedro Astronauta'
+            }
+        });
 
-    //encontrar o botão
-    const button = screen.getByRole('button');
+        //submeter formulário
+        fireEvent.click(button);
 
-    //inserir valor de input
-    fireEvent.change(input, {
-        target: {
-            value: 'Pedro Astronauta'
-        }
+        let errorMessage = screen.queryByRole('alert');
+        expect(errorMessage).toBeInTheDocument();
+
+        jest.runAllTimers();
+
+        errorMessage = screen.queryByRole('alert');
+        expect(errorMessage).toBeNull();
     });
-
-    //Repetir valor de input
-    fireEvent.change(input, {
-        target: {
-            value: 'Pedro Astronauta'
-        }
-    });
-
-    //submeter formulário
-    fireEvent.click(button);
-
-    let errorMessage = screen.queryByRole('alert');
-    expect(errorMessage).toBeInTheDocument();
-
-    jest.runAllTimers();
-
-    errorMessage = screen.queryByRole('alert');
-    expect(errorMessage).toBeNull();
 });
