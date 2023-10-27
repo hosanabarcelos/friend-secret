@@ -18,6 +18,14 @@ jest.mock('react-router-dom', () => {
     }
 })
 
+const mockPrizeDraw = jest.fn();
+
+jest.mock('../hooks/usePrizeDraw.ts', () => {
+    return {
+        usePrizeDraw: () => mockPrizeDraw
+    }
+});
+
 describe('When there were not enough participants', () => {
     beforeEach(() => {
         (useParticipantsList as jest.Mock).mockReturnValue([]);
@@ -65,5 +73,6 @@ describe('When there were enough participants', () => {
 
         expect(mockNavigation).toHaveBeenCalledTimes(1);
         expect(mockNavigation).toHaveBeenCalledWith('/sorteio');
+        expect(mockPrizeDraw).toHaveBeenCalledTimes(1);
     });
 });
