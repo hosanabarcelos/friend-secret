@@ -1,21 +1,26 @@
-import { useNavigate } from "react-router-dom";
-import { useParticipantsList } from "./hooks/useParticipantsList";
+import { useNavigate } from "react-router-dom"
+import { useParticipantsList } from "../state/hook/useParticipantsList"
+import { usePrizeDraw } from '../state/hook/usePrizeDraw';
+
+import './Footer.css'
 
 const Footer = () => {
 
-    const participants = useParticipantsList();
+    const participants = useParticipantsList()
 
-    const navigationTo = useNavigate();
+    const navigateTo = useNavigate()
+
+    const init = usePrizeDraw()
 
     const start = () => {
-        navigationTo('/sorteio');
+        init()
+        navigateTo('/PrizeDraw')
     }
 
-    return (
-        <footer>
-            <button disabled={participants.length < 3} onClick={start}>Play</button>
-        </footer>
-    )
+    return (<footer className="footer-settings">
+        <button className="button" disabled={participants.length < 3} onClick={start}>Iniciar</button>
+        <img src="/imagens/sacolas.png" alt="Sacolas de compras" />
+    </footer>)
 }
 
 export default Footer;

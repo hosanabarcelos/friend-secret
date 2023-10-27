@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/pages/PrizeDraw.test.tsx", "src/pages/PrizeDraw.tsx", "src/pages/Settings.tsx"  ]
 }

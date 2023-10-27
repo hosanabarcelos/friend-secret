@@ -1,36 +1,39 @@
-import { useRef, useState } from "react";
-import { useAddParticipant } from "./hooks/useAddParticipant";
-import { useErrorMessage } from "./hooks/useErrorMessage";
+import { useRef, useState } from "react"
+import { useAddParticipant } from "../state/hook/useAddParticipant"
+import { useErrorMessage } from "../state/hook/useErrorMessage"
+
+import './Form.css'
 
 const Form = () => {
-    const [name, setName] = useState('');
 
-    const inputRef = useRef<HTMLInputElement>(null);
+    const [nome, setNome] = useState('')
 
-    const add = useAddParticipant();
+    const inputRef = useRef<HTMLInputElement>(null)
 
-    const errorMessage = useErrorMessage();
+    const adicionarNaLista = useAddParticipant()
 
-    const addParticipant = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        add(name);
-        setName('');
-        inputRef.current?.focus();
+    const mensagemDeErro = useErrorMessage()
+
+    const adicionarparticipant = (evento: React.FormEvent<HTMLFormElement>) => {
+        evento.preventDefault()
+        adicionarNaLista(nome)
+        setNome('')
+        inputRef.current?.focus()
     }
 
-    return (
-        <form onSubmit={addParticipant }>
+    return (<form onSubmit={adicionarparticipant}>
+        <div className="group-input-btn">
             <input
                 ref={inputRef}
-                value={name}
-                onChange={event => setName(event.target.value)}
+                value={nome}
+                onChange={evento => setNome(evento.target.value)}
                 type="text"
-                placeholder="Insira o nome do participante"
+                placeholder="Insira os nomes dos participants"
             />
-            <button disabled={!name}>Adicionar</button>
-            {errorMessage && <p role="alert">{ errorMessage }</p>}
-        </form>
-    )
+            <button disabled={!nome}>Adicionar</button>
+        </div>
+        {mensagemDeErro && <p className="alerta erro" role="alert">{mensagemDeErro}</p>}
+    </form>)
 }
 
-export default Form;
+export default Form
