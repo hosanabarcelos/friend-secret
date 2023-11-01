@@ -11,7 +11,7 @@ Conhecimentos adquiridos durante o desenvolvimento:
 - Desenvolvimento com TDD;
 - Hooks de encapsulamento;
 - Mock de hooks customizados;
-- Testes de snapshot;
+- Testes de snapshot.
 
  ## 🛠️ Tecnologias
 
